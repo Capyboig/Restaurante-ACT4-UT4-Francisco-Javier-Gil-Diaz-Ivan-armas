@@ -1,4 +1,6 @@
 package model;
+import model.enums.Estado_del_pedido;
+
 
 public class Pedido {
 
@@ -12,35 +14,27 @@ public class Pedido {
     int listaCantidad[];
     String nombre_cliente[];
 
-    /*
-     * 1.- Contador de platos
-     * 2.- id_pedido auto incremental
-     * 3.- plato
-     * 4.- precio
-     * 5.- cantidad
-     * 
-     * Y esto creado en arrays:
-     * listaPlato String
-     * listaPrecio double
-     * listaCantidad int
-     * nombre-cliente String
-     * 
-     * Acuerdate de pre establecer el limite a 5
-     * 
-     * 
-     * Los metodos abajo fallan por que no hay datos, acuerdate de crearlos despues.
-     */
+        //Inicie 2 variables nuevas que necesito para mi metodo, las inicio yo por que son 2 tonterias.
+    Estado_del_pedido estadoDelPedido;
+    Estado_del_pedido estadoDelPedidoNuevo;
 
-    public Pedido(String plato, double precio, int cantidad) {
+
+    //Quite aqui los arrays del constructor ya que no necesitamos traer arrays desde la APP, los inicializamos aqui y ya.
+
+
+    public Pedido(String plato, double precio, int cantidad, Estado_del_pedido estadoDelPedido) {
         this.contadorPlatos = 0;
         this.id_pedido = contadorPlatos++;
         this.plato = plato;
         this.precio = precio;
         this.cantidad = cantidad;
-        this.listaPlato = new String[5];
-        this.listaPrecio = new double[5];
-        this.listaCantidad = new int[5];
-        this.nombre_cliente = new String[5];
+        this.estadoDelPedido = estadoDelPedido;
+
+    }
+
+    public Pedido(Estado_del_pedido estadoDelPedidoNuevo) {
+        this.estadoDelPedidoNuevo = estadoDelPedidoNuevo;
+
     }
 
     public void agregarArticulo() {
@@ -69,4 +63,39 @@ public class Pedido {
         return precioTotal;
     }
 
+
+
+    public void mostrarResumen() {
+        for (int i = 0; i < contadorPlatos; i++) {
+            String nombre = listaPlato[i];
+            int cantidadResumen = listaCantidad[i];
+            double precioUnidad = listaPrecio[i];
+            double subTotal = cantidadResumen * precioUnidad;
+
+
+            System.out.println("############################################################");
+            System.out.println("                    RESUMEN PEDIDO");
+            System.out.println(" Articulo: " + (i + 1) + ":" + nombre); // Esto de +1 es solo decorativo para que el arituclo no ponga Articulo: 0, si no Articulo: 1
+            System.out.println(" Cantidad: " + cantidadResumen + " Precio unitario: " + precioUnidad);
+            System.out.println(" SubTotal: " + subTotal + "€");
+            System.out.println("Total del pedido: " + calculoTotal() + "€");
+            System.out.println("############################################################");
+
+        }
+    }
+
+
+        /*
+        Este funciona basicamente inicializando 2 variables nuevas y 2 constructores, 1 constructor se usa para el metodo de cambiarEstado
+         */
+    public void cambiarEstado(Estado_del_pedido estadoDelPedidoNuevo) {
+        if (this.estadoDelPedido == Estado_del_pedido.Listo_para_entregar && this.estadoDelPedidoNuevo == Estado_del_pedido.En_preparacion) {
+            System.out.println("[ERROR] No puedes pasar de un estado listo para entregar a un en preparacion.");
+        } else if (this.estadoDelPedido == Estado_del_pedido.Entregado){
+            System.out.println("[ERROR] El pedido ya fue entregado, no puede cambiar de estado");
+        } else {
+            this.estadoDelPedido = estadoDelPedidoNuevo;
+            System.out.println("[EXITO] Estado actualizado a " + this.estadoDelPedido);
+        }
+    }
 }
